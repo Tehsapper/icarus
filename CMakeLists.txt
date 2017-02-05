@@ -9,7 +9,7 @@ find_package( OpenCV REQUIRED )
 include_directories(include)
 
 list(APPEND SRC_FILES 
-		src/main.cpp src/video.cpp src/misc.cpp src/config.cpp src/sentry.cpp src/motiondetector.cpp src/imageframe.cpp src/logger.cpp )
+		src/main.cpp src/video.cpp src/config.cpp src/sentry.cpp src/motiondetector.cpp src/imageframe.cpp src/logger.cpp )
 
 
 add_executable( icarus ${SRC_FILES} )

@@ -1,11 +1,10 @@
 #include "config.hpp"
+#include <iostream>
 #include <fstream>
-
-#include <stdio.h>
 
 Config::Config( const char* filename )
 {
-	printf("%s\n", filename);
+	std::cout << "using config file: " << filename << std::endl;
 	values = IniParser::parse( filename );
 }
 
