@@ -7,7 +7,7 @@
 #define CONFIG_FILE_PATH "./config.ini"
 #endif
 
-Sentry::Sentry( void )
+Sentry::Sentry()
 {
 	source = NULL;
 	config = new Config( CONFIG_FILE_PATH );
@@ -26,7 +26,7 @@ Sentry::Sentry( void )
 	warningColor = cv::Scalar(0, 255, 255);
 	clearColor = cv::Scalar(0, 0, 0);
 
-	cv::namedWindow("window");
+	cv::namedWindow("Icarus");
 }
 
 Sentry::Sentry( const int camera_index) : Sentry()
@@ -47,7 +47,7 @@ Sentry::Sentry( const char* filename ) : Sentry()
 	initVideoLogger();
 }
 
-void Sentry::initVideoLogger( void )
+void Sentry::initVideoLogger()
 {
 	assert(source);
 
@@ -55,7 +55,7 @@ void Sentry::initVideoLogger( void )
 	else video_logger = NULL;
 }
 
-void Sentry::loop( void )
+void Sentry::loop()
 {
 	detector->setup( *source );
 	ImageFrame frame;
@@ -76,13 +76,13 @@ void Sentry::loop( void )
 				break;
 		}
 
-		cv::imshow("window", frame.getMatrix() );
+		cv::imshow("Icarus", frame.getMatrix() );
 
 		if(wait > 0) cv::waitKey(wait);
 	}
 }
 
-void Sentry::raise( void )
+void Sentry::raise()
 {
 	switch(level)
 	{
@@ -100,16 +100,16 @@ void Sentry::raise( void )
 	}
 }
 
-void Sentry::lower( void )
+void Sentry::lower()
 {
 	switch(level)
 	{
-		case ThreatLevel::WARNING: level = ThreatLevel::ALL_CLEAR; logger->log("Motion stopped."); break;
-		case ThreatLevel::ALERT: level = ThreatLevel::WARNING; break;
+		case ThreatLevel::WARNING: level = ThreatLevel::ALL_CLEAR; break;
+		case ThreatLevel::ALERT: level = ThreatLevel::WARNING; logger->log("Motion stopped."); break;
 	}
 }
 
-Sentry::~Sentry( void )
+Sentry::~Sentry()
 {
 	delete source;
 	delete config;

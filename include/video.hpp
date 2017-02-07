@@ -19,6 +19,6 @@ class Video
 		Video(const char* filename);
 		bool read(ImageFrame& frame);
 
-		const double getFPS( void ) const ;
-		const cv::Size& getFrameSize( void ) const ;
+		const double getFPS() const ;
+		const cv::Size& getFrameSize() const ;
 };

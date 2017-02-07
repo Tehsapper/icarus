@@ -6,7 +6,7 @@ Logger::Logger(const char* filename)
 	if(!stream) throw std::runtime_error(std::string("failed to open log file ") + filename);
 }
 
-struct tm* getLocalTime( void )
+struct tm* getLocalTime()
 {
 	static time_t raw_time;
 	time(&raw_time);
@@ -23,7 +23,7 @@ void Logger::log(const std::string msg)
 	stream << std::endl;
 }
 
-Logger::~Logger( void )
+Logger::~Logger()
 {
 	stream.close();
 }
@@ -34,7 +34,7 @@ VideoLogger::VideoLogger(double p_fps, cv::Size p_size)
 	fps = p_fps; frame_size = p_size;
 }
 
-void VideoLogger::start( void )
+void VideoLogger::start()
 {
 	count++;
 	strftime(name_buffer, 255, "%F-%H%M%S.mkv", getLocalTime());
@@ -47,7 +47,7 @@ void VideoLogger::log( ImageFrame& frame)
 	if( writer.isOpened() ) writer << frame;
 }
 
-const char* VideoLogger::getName( void )
+const char* VideoLogger::getName()
 {
 	return name_buffer;
 }

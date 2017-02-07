@@ -15,7 +15,7 @@ const std::string& Config::get ( const std::string& name )
 	try
 	{
 		return values.at(name);
-	} catch(std::out_of_range e)
+	} catch(const std::out_of_range& e)
 	{
 		std::runtime_error(std::string("config: failed to get \"") + std::string(name) + std::string("\" value from config!"));
 	}

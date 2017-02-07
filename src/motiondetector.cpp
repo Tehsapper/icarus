@@ -18,6 +18,8 @@ DifferenceMotionDetector::DifferenceMotionDetector(Sentry* ptr) : MotionDetector
 void DifferenceMotionDetector::setup(Video& src)
 {
 	marked_frames_threshold = (int)(stof(parent->getConfig()["detector.alert_time"]) * src.getFPS());
+	watch_count = (int)(stof(parent->getConfig()["detector.watch_time"]) * src.getFPS());
+
 	if(marked_frames_threshold < 1) marked_frames_threshold = 1;
 
 	if(src.read(prev) && src.read(curr))
@@ -44,16 +46,24 @@ void DifferenceMotionDetector::process(ImageFrame& img)
 	if (motion_area > motion_area_threshold) markFrame(diff);
  	else unmarkFrame(diff);
 
+ 	#ifdef DEBUG
+ 	cv::imshow("diff", diff.getMatrix());
+ 	printf("motion area: %f (%d/%d), marked frame count: %d out of %d\n", motion_area, nz, all, marked_frames_count, marked_frames_threshold);
+ 	#endif
+
 	prev = curr;
 	curr = next;
 }
 
 void DifferenceMotionDetector::markFrame(ImageFrame& img)
 {
-	if(marked_frames_count > marked_frames_threshold)
+	if(marked_frames_count == 1 && parent->getLevel() == ThreatLevel::ALL_CLEAR) parent->raise();
+	if(marked_frames_count < marked_frames_threshold) marked_frames_count++;
+	if(marked_frames_count == marked_frames_threshold)
 	{
 		parent->raise();
-	} else marked_frames_count++;
+		marked_frames_count = watch_count;
+	}
 }
 
 void DifferenceMotionDetector::unmarkFrame(ImageFrame& img)

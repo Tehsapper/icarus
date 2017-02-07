@@ -14,12 +14,12 @@ Video::Video(const char* filename)
 	frame_size = cv::Size((int)captor.get(CV_CAP_PROP_FRAME_WIDTH), (int)captor.get(CV_CAP_PROP_FRAME_HEIGHT));
 }
 
-const double Video::getFPS( void ) const 
+const double Video::getFPS() const
 {
 	return fps;
 }
 
-const cv::Size& Video::getFrameSize( void ) const
+const cv::Size& Video::getFrameSize() const
 {
 	return frame_size;
 }

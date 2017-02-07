@@ -35,7 +35,7 @@ void ImageFrame::drawRectangle(const cv::Rect& rect, const cv::Scalar& color, in
 	cv::rectangle( matrix, rect, color, thickness );
 }
 
-void ImageFrame::grayscale( void )
+void ImageFrame::grayscale()
 {
 	cv::cvtColor( matrix, matrix, CV_BGR2GRAY );
 }
@@ -45,7 +45,7 @@ void ImageFrame::threshold( const int value )
 	cv::threshold( matrix, matrix, value, 255, 0 );
 }
 
-void ImageFrame::closeMorph( void )
+void ImageFrame::closeMorph()
 {
 	static int kernel_size = 5;
 	static cv::Mat kernel = getStructuringElement( 2, cv::Size( 2*kernel_size + 1, 2*kernel_size+1 ) );

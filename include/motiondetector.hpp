@@ -25,7 +25,7 @@ class DifferenceMotionDetector : public MotionDetector
 {
 	private:
 		ImageFrame prev, curr, next;
-		int threshold, marked_frames_count, marked_frames_threshold;
+		int threshold, marked_frames_count, marked_frames_threshold, watch_count;
 		float motion_area_threshold;
 	public:
 		DifferenceMotionDetector(Sentry* ptr);

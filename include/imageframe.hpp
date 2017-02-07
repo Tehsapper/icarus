@@ -1,13 +1,13 @@
 #pragma once
 
+#ifndef __cplusplus
+#  error imageframe.hpp is a C++ header
+#endif
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <vector>
-
-#ifndef __cplusplus
-#  error imageframe.hpp is a C++ header
-#endif
 
 class ImageFrame
 {
@@ -45,10 +45,10 @@ class ImageFrame
 
 		bool readFrom(cv::VideoCapture& video);
 
-		const cv::Mat& getMatrix( void ) const { return matrix; }
-		void grayscale( void );
+		const cv::Mat& getMatrix() const { return matrix; }
+		void grayscale();
 		void threshold( const int value );
-		void closeMorph( void );
+		void closeMorph();
 		void drawRectangle(const cv::Rect& rect, const cv::Scalar& color, int thickness);
 		ImageFrame& crop(const cv::Rect& rect);
 };

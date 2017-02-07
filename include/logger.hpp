@@ -10,7 +10,7 @@
 #include <string>
 #include <time.h>
 
-struct tm* getLocalTime( void );
+struct tm* getLocalTime();
 
 class Logger
 {
@@ -19,7 +19,7 @@ class Logger
 	public:
 		Logger(const char* filename);
 		virtual void log(const std::string msg);
-		virtual ~Logger( void );
+		virtual ~Logger();
 };
 
 class VideoLogger
@@ -32,10 +32,10 @@ class VideoLogger
 		cv::VideoWriter writer;
 	public:
 		VideoLogger(double p_fps, cv::Size p_size);
-		virtual void start( void );
+		virtual void start();
 		virtual void log( ImageFrame& frame );
 
-		const char* getName( void );
+		const char* getName();
 
-		virtual ~VideoLogger( void );
+		virtual ~VideoLogger();
 };
