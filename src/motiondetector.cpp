@@ -3,12 +3,12 @@
 #include <string>
 #include <stdio.h>
 
-MotionDetector::MotionDetector(Sentry* ptr)
+Detector::Detector(Sentry* ptr)
 {
 	parent = ptr;
 }
 
-DifferenceMotionDetector::DifferenceMotionDetector(Sentry* ptr) : MotionDetector(ptr)
+DifferenceMotionDetector::DifferenceMotionDetector(Sentry* ptr) : Detector(ptr)
 {
 	threshold = stoi(parent->getConfig()["detector.threshold_value"]);
 	marked_frames_count = 0;
@@ -69,4 +69,64 @@ void DifferenceMotionDetector::markFrame(ImageFrame& img)
 void DifferenceMotionDetector::unmarkFrame(ImageFrame& img)
 {
 	if(marked_frames_count > 0) marked_frames_count--; else parent->lower();
+}
+
+TamperingDetector::TamperingDetector(Sentry* ptr) : Detector(ptr)
+{
+	printf("Created tampering detector!\n");
+	pbgSub = cv::createBackgroundSubtractorMOG2(1000, 32, false);
+}
+
+#define DEBUG
+
+void TamperingDetector::setup(Video& src)
+{
+	marked_frames_threshold = (int)(stof(parent->getConfig()["detector.alert_time"]) * src.getFPS());
+	watch_count = (int)(stof(parent->getConfig()["detector.watch_time"]) * src.getFPS());
+
+	if(marked_frames_threshold < 1) marked_frames_threshold = 1;
+
+	if(src.read(frame))
+	{
+		pbgSub->apply(frame.getMatrix(), fgMask);
+	} else throw std::runtime_error(std::string("failed to setup TamperingDetector: couldn't read a frame from video source"));
+}
+
+void TamperingDetector::process(ImageFrame& img)
+{
+	pbgSub->apply(img.getMatrix(), fgMask);
+	ImageFrame fgFrame(fgMask);
+
+	fgFrame.closeMorph();
+
+	int nz = countNonZero(fgFrame.getMatrix()), all = fgFrame.getMatrix().total();
+	float area = ((float)nz / (float)all) * 100.0f;
+	
+	if (area > area_threshold) markFrame(img);
+ 	else unmarkFrame(img);
+
+ 	#ifdef DEBUG
+ 	cv::imshow("fgMask", fgFrame.getMatrix());
+ 	printf("area: %f (%d/%d), marked frame count: %d out of %d\n", area, nz, all, marked_frames_count, marked_frames_threshold);
+ 	#endif
+}
+
+void TamperingDetector::markFrame(ImageFrame& img)
+{
+	if(marked_frames_count == 1 && parent->getLevel() == ThreatLevel::ALL_CLEAR) parent->raise();
+	if(marked_frames_count < marked_frames_threshold) marked_frames_count++;
+	if(marked_frames_count == marked_frames_threshold)
+	{
+		parent->raise();
+		marked_frames_count = watch_count;
+	}
+}
+
+void TamperingDetector::unmarkFrame(ImageFrame& img)
+{
+	if(marked_frames_count > 0) marked_frames_count--; else parent->lower();
+}
+
+TamperingDetector::~TamperingDetector()
+{
 }

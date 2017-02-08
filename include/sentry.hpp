@@ -11,14 +11,14 @@
 
 enum class ThreatLevel { ALL_CLEAR, WARNING, ALERT };
 
-class MotionDetector;
+class Detector;
 
 class Sentry
 {
 	protected:
 		Video* source;
 		VideoLogger* video_logger;
-		MotionDetector* detector;
+		Detector* detector;
 		Config* config;
 		Logger* logger;
 		ThreatLevel level;
@@ -26,19 +26,19 @@ class Sentry
 		cv::Rect detectionRegion;
 		cv::Scalar alertColor, clearColor, warningColor;
 	public:
-		Sentry( void );
+		Sentry();
 		Sentry( const int camera_index );
 		Sentry( const char* filename );
 
-		void loop( void );
-		void initVideoLogger( void );
+		void loop();
+		void initVideoLogger();
 
-		void raise( void );
-		void lower( void );
+		void raise();
+		void lower();
 		
-		Config& getConfig( void ) { return *config; }
+		Config& getConfig() { return *config; }
 		const ThreatLevel getLevel() const { return level; }
-		const cv::Rect& getDetectionRegion( void ) const { return detectionRegion; }
+		const cv::Rect& getDetectionRegion() const { return detectionRegion; }
 
-		virtual ~Sentry( void );
+		virtual ~Sentry();
 };

@@ -19,7 +19,7 @@ Sentry::Sentry()
 							   cv::Point(stoi((*config)["detector.region_x2"]), stoi((*config)["detector.region_y2"])));
 
 	relaxed_delay = 0;
-	detector = new DifferenceMotionDetector( this );
+	detector = new TamperingDetector( this );
 
 	// B G R
 	alertColor = cv::Scalar(0, 0, 255);
