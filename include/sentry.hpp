@@ -6,7 +6,6 @@
 
 #include "video.hpp"
 #include "config.hpp"
-#include "motiondetector.hpp"
 #include "logger.hpp"
 
 enum class ThreatLevel { ALL_CLEAR, WARNING, ALERT };
@@ -31,12 +30,15 @@ class Sentry
 		Sentry( const char* filename );
 
 		void loop();
+		bool provideFrame(ImageFrame& frame);
 		void initVideoLogger();
+		void initDetectionRegion();
 
 		void raise();
 		void lower();
 		
-		Config& getConfig() { return *config; }
+		const Video& getVideo() const { return *source; }
+		Config& getConfig() const { return *config; }
 		const ThreatLevel getLevel() const { return level; }
 		const cv::Rect& getDetectionRegion() const { return detectionRegion; }
 

@@ -17,7 +17,7 @@ const std::string& Config::get ( const std::string& name )
 		return values.at(name);
 	} catch(const std::out_of_range& e)
 	{
-		std::runtime_error(std::string("config: failed to get \"") + std::string(name) + std::string("\" value from config!"));
+		throw std::runtime_error(std::string("config: failed to get \"") + std::string(name) + std::string("\" value from config!"));
 	}
 }
 

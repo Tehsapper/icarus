@@ -28,14 +28,17 @@ class VideoLogger
 		size_t count;
 		char name_buffer[255];
 		double fps;
+		bool save_flag;
 		cv::Size frame_size;
 		cv::VideoWriter writer;
 	public:
 		VideoLogger(double p_fps, cv::Size p_size);
 		virtual void start();
 		virtual void log( ImageFrame& frame );
+		virtual void stop();
+		virtual void save();
 
-		const char* getName();
+		const char* getName() const;
 
 		virtual ~VideoLogger();
 };
